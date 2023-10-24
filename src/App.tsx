@@ -1,39 +1,40 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom"
-import Layout from "./components/layout"
-import Home from "./routes/home"
-import Profile from "./routes/profile"
-import Login from "./routes/login"
-import CreateAccount from "./routes/create-account"
-import { createGlobalStyle } from "styled-components"
-import reset from "styled-reset"
-import { useEffect, useState } from "react"
-import LoadingScreen from "./components/loading-screen"
-import { auth } from "./firebase"
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import Layout from "./components/layout";
+import Home from "./routes/home";
+import Profile from "./routes/profile";
+import Login from "./routes/login";
+import CreateAccount from "./routes/create-account";
+import styled, { createGlobalStyle } from "styled-components";
+import reset from "styled-reset";
+import { useEffect, useState } from "react";
+import LoadingScreen from "./components/loading-screen";
+import { auth } from "./firebase";
+import ProtectedRoute from "./components/protected-route";
 
 const router = createBrowserRouter([
   {
-    path:"/",
-    element: <Layout />,
+    path: "/",
+    element: <ProtectedRoute><Layout /></ProtectedRoute>,
     children: [
       {
         path: "", // 위와 동일한 path 경로를 갖는다
-        element: <Home />
+        element: <Home />,
       },
       {
         path: "profile",
-        element: <Profile />
-      }
+        element: <Profile />,
+      },
     ],
   },
   {
     path: "/login",
-    element: <Login />
+    element: <Login />,
   },
   {
     path: "/create-account",
-    element: <CreateAccount />
-  }
-])
+    element: <CreateAccount />,
+  },
+]);
 
 const GlobalStyles = createGlobalStyle`
   ${reset};
@@ -47,22 +48,32 @@ const GlobalStyles = createGlobalStyle`
   }
 `;
 
+const Wrapper = styled.div`
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+`;
+
 function App() {
   const [isLoading, setLoading] = useState(true);
-  const init = async() => {
+  const init = async () => {
     // wait for firebase
     // setTimeout(() => setLoading(false), 2000);
     await auth.authStateReady();
     setLoading(false);
   };
-  useEffect(() => {init()}, []);
+  useEffect(() => {
+    init();
+  }, []);
   return (
     <>
-      <GlobalStyles />
-      {/* <Rout{erProvider router ={router} /> */}
-      {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
+      <Wrapper>
+        <GlobalStyles />
+        {/* <Rout{erProvider router ={router} /> */}
+        {isLoading ? <LoadingScreen /> : <RouterProvider router={router} />}
+      </Wrapper>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
