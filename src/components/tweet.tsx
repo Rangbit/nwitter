@@ -109,7 +109,8 @@ export default function Tweet({ username, photo, tweet, userId, id }: ITweet) {
   const onSubmit = async(event : React.FormEvent) => {
     event.preventDefault();
     console.log(tweet, id, newNweet);
-    await updateDoc(``);
+    await updateDoc(doc(db, 'tweets', id), {tweet : newNweet});
+    setEditing(false);
   }
 
   return (
