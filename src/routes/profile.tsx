@@ -3,7 +3,7 @@ import { auth, db, storage } from "../firebase";
 import { useEffect, useState } from "react";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { updateProfile } from "firebase/auth";
-import { collection, doc, getDocs, limit, orderBy, query, where } from "firebase/firestore";
+import { collection, getDocs, limit, orderBy, query, where } from "firebase/firestore";
 import { ITweet } from "../components/timeline";
 import Tweet from "../components/tweet";
 
@@ -148,7 +148,7 @@ export default function Profile() {
     <Wrapper>
       <AvatarUpload htmlFor="avatar">
         {Boolean(avatar) ? (
-          <AvatarImg src={avatar} />
+          <AvatarImg src={avatar || "/user-logo.svg"} />
         ) : (
           <UserLogo src="/user-logo.svg" />
         )}
@@ -162,7 +162,7 @@ export default function Profile() {
       {editing ? 
       <>
       <NameForm onSubmit={onSubmit}>
-        <UserInput type="text" value={newUsername} onChange={onUsernameChange} />
+        <UserInput type="text" value={newUsername || ''} onChange={onUsernameChange} />
         <ButtonBox>
           <SubmitButton type="submit" value="Update" />
           <UpdateButton onClick={onUpdate}>Cancel</UpdateButton>
